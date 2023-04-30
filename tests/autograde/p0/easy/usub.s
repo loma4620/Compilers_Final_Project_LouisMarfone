@@ -1,0 +1,60 @@
+.global main
+main:
+ pushl %ebp
+ movl %esp, %ebp
+ subl $0, %esp
+ pushl %edi
+ pushl $1
+ call inject_int
+ movl %eax, %edi
+ addl $4, %esp
+ pushl %edi
+ call is_int
+ movl %eax, %eax
+ addl $4, %esp
+ cmpl $0, %eax
+ je else0
+ then0:
+ pushl %edi
+ call project_int
+ movl %eax, %eax
+ addl $4, %esp
+ negl %eax
+ pushl %eax
+ call inject_int
+ movl %eax, %eax
+ addl $4, %esp
+ jmp endif0
+ else0:
+ pushl %edi
+ call is_big
+ movl %eax, %eax
+ addl $4, %esp
+ cmpl $0, %eax
+ je else1
+ then1:
+ pushl $0
+ call error_pyobj
+ movl %eax, %eax
+ addl $4, %esp
+ jmp endif1
+ else1:
+ pushl %edi
+ call project_bool
+ movl %eax, %eax
+ addl $4, %esp
+ negl %eax
+ pushl %eax
+ call inject_int
+ movl %eax, %eax
+ addl $4, %esp
+ endif1:
+ endif0:
+ pushl %eax
+ call print_any
+ addl $4, %esp
+ movl $0, %eax 
+ popl %edi
+ movl %ebp, %esp
+ popl %ebp
+ ret
