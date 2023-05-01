@@ -155,7 +155,8 @@ if __name__ == "__main__":
         #create interference graph
         funcIG = InterferenceGraph(funcVariables, totalFuncLiveness, func_IR_NoLabels)
         funcIG.CreateGraph()
-        funcIG.ColorGraph()
+        # funcIG.ColorGraph()
+        funcIG.ColorGraphRLF()
 
         #recreate repeate last 4 steps till there are no more spilled variables
         spilledFuncVariables = funcIG.spilledVariables
@@ -176,7 +177,8 @@ if __name__ == "__main__":
             newFuncVariables = variableCounterIR(newFuncIR)
             newFuncIG = InterferenceGraph(newFuncVariables, newFuncLiveness, new_Func_NoLabels)
             newFuncIG.CreateGraph()
-            newFuncIG.ColorGraph()
+            # newFuncIG.ColorGraph()
+            newFuncIG.ColorGraphRLF()
             spilledFuncVariables = newFuncIG.spilledVariables
             oldFuncIR = newFuncIR
         
@@ -211,7 +213,8 @@ if __name__ == "__main__":
     #create interference graph
     IG = InterferenceGraph(progVariables, totalLiveness, IR_NoLabels)
     IG.CreateGraph()
-    IG.ColorGraph()
+    # IG.ColorGraph()
+    IG.ColorGraphRLF()
 
     #recreate repeate last 4 steps till there are no more spilled variables
     spilledVariables = IG.spilledVariables
@@ -232,7 +235,8 @@ if __name__ == "__main__":
         newVariables = variableCounterIR(newIR)
         newIG = InterferenceGraph(newVariables, newLiveness, new_NoLabels)
         newIG.CreateGraph()
-        newIG.ColorGraph()
+        # newIG.ColorGraph()
+        newIG.ColorGraphRLF()
         spilledVariables = newIG.spilledVariables
         oldIR = newIR
 

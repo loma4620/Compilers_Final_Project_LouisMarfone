@@ -3,6 +3,10 @@ class InterferenceGraph():
         self.liveness = liveness
         self.variables = elements
         self.IR_prog = IR_prog
+        #sets for RLF coloring method
+        self.InclusionSet = set()
+        self.ExclusionSet = set()
+        self.SolutionSet = set()
         self.adjDict = {
             'eax': ['tan', set()], 
             'ecx': ['green', set()], 
@@ -13,6 +17,7 @@ class InterferenceGraph():
         }
         self.constraints = {} # for coloring
         self.spillNum = 1
+        self.registers = ['eax', 'ecx', 'edx', 'edi', 'ebx', 'esi']
 
         # add vars to graph
         for v in self.variables:
@@ -32,6 +37,8 @@ class InterferenceGraph():
             else:
                 self.adjDict.update({v: ['none', set()]})
                 self.constraints.update({v: []})
+            
+            self.InclusionSet.add(v)
         
         self.colorPriority = {
             'tan': '1', 
@@ -193,7 +200,8 @@ class InterferenceGraph():
                                 self.adjDict['eax'][1].add(var)
                             if 'eax' not in self.adjDict[var][1]:
                                 self.adjDict[var][1].add('eax')
-                    
+
+    #Color Graph Greedy--------------------------------------------------------------------------------------
 
     def GetNodeColor(self, target):
         color = 'none'
@@ -259,6 +267,65 @@ class InterferenceGraph():
                     break
             
             self.UpdateConstraints(list(self.adjDict[nextVar][1]))
+
+    # Color Graph RLF-----------------------------------------------------------------------------------------------------------
+
+    def ColorGraphRLF(self):
+        i = 0
+        while (len(self.InclusionSet) != 0):
+            if (i >= 6):
+                #if all colors have been assigned add the remaining vertices to spilled variables
+                for spilled in self.InclusionSet:
+                    self.spilledVariables.append(spilled)
+                    stack_placement = '-' + str(self.spillNum*4) + '(%ebp)'
+                    self.adjDict[spilled][0] = stack_placement
+                    self.spillNum += 1
+                    self.SolutionSet.add(spilled) 
+                self.InclusionSet = set()   
+            else:
+                currColor = list(self.colorPriority.keys())[i]
+                i += 1
+                while(len(self.InclusionSet) != 0):
+                    v = self.InclusionSet.pop()
+                    repick = False
+                    noMoreRegs = False
+                    for vertex in self.adjDict[v][1]:
+                        if (self.adjDict[vertex][0] == currColor):
+                            repick=True
+                    
+                    tempV = []
+                    while (repick):
+                        tempV.append(v)
+                        if (len(self.InclusionSet) != 0):
+                            v = self.InclusionSet.pop()
+                            for vertex in self.adjDict[v][1]:
+                                if (self.adjDict[vertex][0] == currColor):
+                                    repick=True
+                                    break
+                                else:
+                                    repick=False
+                        else:
+                            repick = False
+                            noMoreRegs = True
+                            
+                    if (noMoreRegs):
+                        for idx in tempV:
+                            self.ExclusionSet.add(idx)
+                        break
+
+                    for index in tempV:
+                        self.InclusionSet.add(index)
+                    
+                    self.adjDict[v][0] = currColor
+                    for adj in self.adjDict[v][1]:
+                        if (adj in self.InclusionSet):
+                            self.ExclusionSet.add(adj)
+
+                self.InclusionSet = self.ExclusionSet
+                self.ExclusionSet = set()
+             
+
+    # Assign Homes Functions----------------------------------------------------------------------------------------------------
 
     def jumpLocationsHelper(self, command):
         jumpName = command[0][:-1]

@@ -1,0 +1,44 @@
+t0 = 1 + 2
+t1 = t0 + 3
+t2 = t1 + 4
+t3 = t2 + 5
+print(t3)
+
+
+Module(
+    body=[
+        Assign(
+            targets=[
+                Name(id='t0', ctx=Store())],
+            value=BinOp(
+                left=Constant(value=1),
+                op=Add(),
+                right=Constant(value=2))),
+        Assign(
+            targets=[
+                Name(id='t1', ctx=Store())],
+            value=BinOp(
+                left=Name(id='t0', ctx=Load()),
+                op=Add(),
+                right=Constant(value=3))),
+        Assign(
+            targets=[
+                Name(id='t2', ctx=Store())],
+            value=BinOp(
+                left=Name(id='t1', ctx=Load()),
+                op=Add(),
+                right=Constant(value=4))),
+        Assign(
+            targets=[
+                Name(id='t3', ctx=Store())],
+            value=BinOp(
+                left=Name(id='t2', ctx=Load()),
+                op=Add(),
+                right=Constant(value=5))),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Name(id='t3', ctx=Load())],
+                keywords=[]))],
+    type_ignores=[])

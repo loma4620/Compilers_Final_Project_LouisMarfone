@@ -17,10 +17,11 @@ main:
  then0:
  pushl %edi
  call project_int
- movl %eax, %eax
+ movl %eax, %edi
  addl $4, %esp
- negl %eax
- pushl %eax
+ movl %edi, %edx
+ negl %edx
+ pushl %edx
  call inject_int
  movl %eax, %edi
  addl $4, %esp
@@ -61,8 +62,9 @@ main:
  call project_int
  movl %eax, %eax
  addl $4, %esp
- negl %eax
- pushl %eax
+ movl %eax, %edi
+ negl %edi
+ pushl %edi
  call inject_int
  movl %eax, %edi
  addl $4, %esp
@@ -103,8 +105,9 @@ main:
  call project_int
  movl %eax, %eax
  addl $4, %esp
- negl %eax
- pushl %eax
+ movl %eax, %ecx
+ negl %ecx
+ pushl %ecx
  call inject_int
  movl %eax, %edi
  addl $4, %esp
@@ -125,10 +128,10 @@ main:
  else5:
  pushl %edi
  call project_bool
- movl %eax, %eax
+ movl %eax, %edi
  addl $4, %esp
- negl %eax
- pushl %eax
+ negl %edi
+ pushl %edi
  call inject_int
  movl %eax, %edi
  addl $4, %esp
@@ -167,8 +170,9 @@ main:
  else7:
  pushl %edi
  call project_bool
- movl %eax, %eax
+ movl %eax, %edi
  addl $4, %esp
+ movl %edi, %eax
  negl %eax
  pushl %eax
  call inject_int
@@ -185,10 +189,10 @@ main:
  then8:
  pushl %edi
  call project_int
- movl %eax, %eax
+ movl %eax, %edi
  addl $4, %esp
- negl %eax
- pushl %eax
+ negl %edi
+ pushl %edi
  call inject_int
  movl %eax, %edi
  addl $4, %esp
@@ -211,8 +215,9 @@ main:
  call project_bool
  movl %eax, %eax
  addl $4, %esp
- negl %eax
- pushl %eax
+ movl %eax, %edi
+ negl %edi
+ pushl %edi
  call inject_int
  movl %eax, %edi
  addl $4, %esp
@@ -229,8 +234,9 @@ main:
  call project_int
  movl %eax, %eax
  addl $4, %esp
- negl %eax
- pushl %eax
+ movl %eax, %edi
+ negl %edi
+ pushl %edi
  call inject_int
  movl %eax, %eax
  addl $4, %esp

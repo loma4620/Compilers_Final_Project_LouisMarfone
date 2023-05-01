@@ -72,8 +72,8 @@ if __name__ == "__main__":
 
     pa.visit(tree)
 
-    ast.fix_missing_locations(tree)
-    print(ast.unparse(tree))
+    # ast.fix_missing_locations(tree)
+    # print(ast.unparse(tree))
 
     lambdaCount = unifier.lambdaCounter
 
@@ -233,7 +233,8 @@ if __name__ == "__main__":
         funcIG = InterferenceGraph(funcVariables, totalFuncLiveness, func_IR_NoLabels)
         funcIG.CreateGraph()
         # funcIG.PrintGraph()
-        funcIG.ColorGraph()
+        # funcIG.ColorGraph()
+        funcIG.ColorGraphRLF()
 
         #recreate repeate last 4 steps till there are no more spilled variables
         spilledFuncVariables = funcIG.spilledVariables
@@ -255,7 +256,8 @@ if __name__ == "__main__":
             newFuncVariables = variableCounterIR(newFuncIR)
             newFuncIG = InterferenceGraph(newFuncVariables, newFuncLiveness, new_Func_NoLabels)
             newFuncIG.CreateGraph()
-            newFuncIG.ColorGraph()
+            # newFuncIG.ColorGraph()
+            newFuncIG.ColorGraphRLF()
             spilledFuncVariables = newFuncIG.spilledVariables
             oldFuncIR = newFuncIR
 
@@ -300,9 +302,10 @@ if __name__ == "__main__":
     IG = InterferenceGraph(progVariables, totalLiveness, IR_NoLabels)
     IG.CreateGraph()
     # IG.PrintGraph()
-    IG.ColorGraph()
+    # IG.ColorGraph()
+    IG.ColorGraphRLF()
 
-    # IG.PrintGraph()
+    IG.PrintGraph()
 
     #recreate repeate last 4 steps till there are no more spilled variables
     spilledVariables = IG.spilledVariables
@@ -324,7 +327,8 @@ if __name__ == "__main__":
         newVariables = variableCounterIR(newIR)
         newIG = InterferenceGraph(newVariables, newLiveness, new_NoLabels)
         newIG.CreateGraph()
-        newIG.ColorGraph()
+        # newIG.ColorGraph()
+        newIG.ColorGraphRLF()
         spilledVariables = newIG.spilledVariables
         oldIR = newIR
 
