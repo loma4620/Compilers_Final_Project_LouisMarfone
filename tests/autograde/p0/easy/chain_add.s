@@ -8,48 +8,43 @@ main:
  pushl %esi
  pushl $1
  call inject_int
+ movl %eax, %esi
+ addl $4, %esp
+ pushl $2
+ call inject_int
  movl %eax, %ebx
  addl $4, %esp
- movl $2, %eax
- pushl %eax
- call inject_int
- movl %eax, %eax
- addl $4, %esp
- movl %eax, -12(%ebp)
- pushl %ebx
+ pushl %esi
  call is_int
  movl %eax, %eax
  addl $4, %esp
  cmpl $0, %eax
  je else0
  then0:
- movl -12(%ebp), %eax
- pushl %eax
+ pushl %ebx
  call is_int
  movl %eax, %eax
  addl $4, %esp
  cmpl $0, %eax
  je else1
  then1:
- pushl %ebx
+ pushl %esi
  call project_int
- movl %eax, %ebx
+ movl %eax, %edi
  addl $4, %esp
- movl -12(%ebp), %eax
- pushl %eax
+ pushl %ebx
  call project_int
  movl %eax, %eax
  addl $4, %esp
- movl %ebx, %ecx
+ movl %edi, %ecx
  addl %eax, %ecx
  pushl %ecx
  call inject_int
- movl %eax, %esi
+ movl %eax, %edi
  addl $4, %esp
  jmp endif1
  else1:
- movl -12(%ebp), %eax
- pushl %eax
+ pushl %ebx
  call is_big
  movl %eax, %eax
  addl $4, %esp
@@ -58,63 +53,59 @@ main:
  then2:
  pushl $0
  call error_pyobj
- movl %eax, %esi
+ movl %eax, %edi
  addl $4, %esp
  jmp endif2
  else2:
- pushl %ebx
+ pushl %esi
  call project_int
- movl %eax, %ebx
+ movl %eax, %edi
  addl $4, %esp
- movl -12(%ebp), %eax
- pushl %eax
+ pushl %ebx
  call project_bool
- movl %eax, %eax
+ movl %eax, %ecx
  addl $4, %esp
- movl %ebx, %ecx
- addl %eax, %ecx
- pushl %ecx
+ movl %edi, %eax
+ addl %ecx, %eax
+ pushl %eax
  call inject_int
- movl %eax, %esi
+ movl %eax, %edi
  addl $4, %esp
  endif2:
  endif1:
  jmp endif0
  else0:
- pushl %ebx
+ pushl %esi
  call is_bool
  movl %eax, %eax
  addl $4, %esp
  cmpl $0, %eax
  je else3
  then3:
- movl -12(%ebp), %eax
- pushl %eax
+ pushl %ebx
  call is_bool
  movl %eax, %eax
  addl $4, %esp
  cmpl $0, %eax
  je else4
  then4:
+ pushl %esi
+ call project_bool
+ movl %eax, %edi
+ addl $4, %esp
  pushl %ebx
  call project_bool
- movl %eax, %ebx
+ movl %eax, %ecx
  addl $4, %esp
- movl -12(%ebp), %eax
+ movl %edi, %eax
+ addl %ecx, %eax
  pushl %eax
- call project_bool
- movl %eax, %eax
- addl $4, %esp
- movl %ebx, %ecx
- addl %eax, %ecx
- pushl %ecx
  call inject_int
- movl %eax, %esi
+ movl %eax, %edi
  addl $4, %esp
  jmp endif4
  else4:
- movl -12(%ebp), %eax
- pushl %eax
+ pushl %ebx
  call is_big
  movl %eax, %eax
  addl $4, %esp
@@ -123,67 +114,64 @@ main:
  then5:
  pushl $0
  call error_pyobj
- movl %eax, %esi
+ movl %eax, %edi
  addl $4, %esp
  jmp endif5
  else5:
- pushl %ebx
+ pushl %esi
  call project_bool
- movl %eax, %ebx
+ movl %eax, %edi
  addl $4, %esp
- movl -12(%ebp), %eax
- pushl %eax
+ pushl %ebx
  call project_int
  movl %eax, %eax
  addl $4, %esp
- movl %ebx, %ecx
+ movl %edi, %ecx
  addl %eax, %ecx
  pushl %ecx
  call inject_int
- movl %eax, %esi
+ movl %eax, %edi
  addl $4, %esp
  endif5:
  endif4:
  jmp endif3
  else3:
- pushl %ebx
+ pushl %esi
  call is_big
  movl %eax, %eax
  addl $4, %esp
  cmpl $0, %eax
  je endif6
  then6:
- movl -12(%ebp), %eax
- pushl %eax
+ pushl %ebx
  call is_big
  movl %eax, %eax
  addl $4, %esp
  cmpl $0, %eax
  je else7
  then7:
- pushl %ebx
+ pushl %esi
  call project_big
- movl %eax, %ebx
+ movl %eax, %edi
  addl $4, %esp
- movl -12(%ebp), %eax
- pushl %eax
+ pushl %ebx
  call project_big
  movl %eax, %eax
  addl $4, %esp
  pushl %eax
- pushl %ebx
+ pushl %edi
  call add
  movl %eax, %eax
  addl $8, %esp
  pushl %eax
  call inject_big
- movl %eax, %esi
+ movl %eax, %edi
  addl $4, %esp
  jmp endif7
  else7:
  pushl $0
  call error_pyobj
- movl %eax, %esi
+ movl %eax, %edi
  addl $4, %esp
  endif7:
  jmp endif6
@@ -194,7 +182,7 @@ main:
  call inject_int
  movl %eax, %ebx
  addl $4, %esp
- pushl %esi
+ pushl %edi
  call is_int
  movl %eax, %eax
  addl $4, %esp
@@ -208,21 +196,21 @@ main:
  cmpl $0, %eax
  je else9
  then9:
- pushl %esi
+ pushl %edi
  call project_int
- movl %eax, %esi
+ movl %eax, %edi
  addl $4, %esp
  pushl %ebx
  call project_int
  movl %eax, %ecx
  addl $4, %esp
- movl %esi, %eax
+ movl %edi, %eax
  addl %ecx, %eax
  pushl %eax
  call inject_int
  movl %eax, %eax
  addl $4, %esp
- movl %eax, -4(%ebp)
+ movl %eax, -12(%ebp)
  jmp endif9
  else9:
  pushl %ebx
@@ -237,29 +225,30 @@ main:
  call error_pyobj
  movl %eax, %eax
  addl $4, %esp
- movl %eax, -4(%ebp)
+ movl %eax, -12(%ebp)
  jmp endif10
  else10:
- pushl %esi
+ pushl %edi
  call project_int
- movl %eax, %esi
+ movl %eax, %edi
  addl $4, %esp
  pushl %ebx
  call project_bool
- movl %eax, %ecx
+ movl %eax, %eax
  addl $4, %esp
- movl %esi, %eax
- addl %ecx, %eax
+ movl %edi, %ecx
+ addl %eax, %ecx
+ movl %ecx, %eax
  pushl %eax
  call inject_int
  movl %eax, %eax
  addl $4, %esp
- movl %eax, -4(%ebp)
+ movl %eax, -12(%ebp)
  endif10:
  endif9:
  jmp endif8
  else8:
- pushl %esi
+ pushl %edi
  call is_bool
  movl %eax, %eax
  addl $4, %esp
@@ -273,22 +262,22 @@ main:
  cmpl $0, %eax
  je else12
  then12:
- pushl %esi
+ pushl %edi
  call project_bool
- movl %eax, %esi
+ movl %eax, %edi
  addl $4, %esp
  pushl %ebx
  call project_bool
  movl %eax, %eax
  addl $4, %esp
- movl %esi, %ecx
+ movl %edi, %ecx
  addl %eax, %ecx
  movl %ecx, %eax
  pushl %eax
  call inject_int
  movl %eax, %eax
  addl $4, %esp
- movl %eax, -4(%ebp)
+ movl %eax, -12(%ebp)
  jmp endif12
  else12:
  pushl %ebx
@@ -303,30 +292,30 @@ main:
  call error_pyobj
  movl %eax, %eax
  addl $4, %esp
- movl %eax, -4(%ebp)
+ movl %eax, -12(%ebp)
  jmp endif13
  else13:
- pushl %esi
+ pushl %edi
  call project_bool
- movl %eax, %esi
+ movl %eax, %edi
  addl $4, %esp
  pushl %ebx
  call project_int
  movl %eax, %eax
  addl $4, %esp
- movl %esi, %ecx
+ movl %edi, %ecx
  addl %eax, %ecx
  movl %ecx, %eax
  pushl %eax
  call inject_int
  movl %eax, %eax
  addl $4, %esp
- movl %eax, -4(%ebp)
+ movl %eax, -12(%ebp)
  endif13:
  endif12:
  jmp endif11
  else11:
- pushl %esi
+ pushl %edi
  call is_big
  movl %eax, %eax
  addl $4, %esp
@@ -340,16 +329,16 @@ main:
  cmpl $0, %eax
  je else15
  then15:
- pushl %esi
+ pushl %edi
  call project_big
- movl %eax, %esi
+ movl %eax, %edi
  addl $4, %esp
  pushl %ebx
  call project_big
  movl %eax, %eax
  addl $4, %esp
  pushl %eax
- pushl %esi
+ pushl %edi
  call add
  movl %eax, %eax
  addl $8, %esp
@@ -357,7 +346,7 @@ main:
  call inject_big
  movl %eax, %eax
  addl $4, %esp
- movl %eax, -4(%ebp)
+ movl %eax, -12(%ebp)
  jmp endif15
  else15:
  movl $0, %eax
@@ -365,7 +354,7 @@ main:
  call error_pyobj
  movl %eax, %eax
  addl $4, %esp
- movl %eax, -4(%ebp)
+ movl %eax, -12(%ebp)
  endif15:
  jmp endif14
  endif14:
@@ -375,7 +364,7 @@ main:
  call inject_int
  movl %eax, %ebx
  addl $4, %esp
- movl -4(%ebp), %eax
+ movl -12(%ebp), %eax
  pushl %eax
  call is_int
  movl %eax, %eax
@@ -390,7 +379,7 @@ main:
  cmpl $0, %eax
  je else17
  then17:
- movl -4(%ebp), %eax
+ movl -12(%ebp), %eax
  pushl %eax
  call project_int
  movl %eax, %eax
@@ -402,10 +391,12 @@ main:
  addl $4, %esp
  movl %edi, %ecx
  addl %eax, %ecx
- pushl %ecx
+ movl %ecx, %eax
+ pushl %eax
  call inject_int
- movl %eax, %edi
+ movl %eax, %eax
  addl $4, %esp
+ movl %eax, -4(%ebp)
  jmp endif17
  else17:
  pushl %ebx
@@ -415,13 +406,15 @@ main:
  cmpl $0, %eax
  je else18
  then18:
- pushl $0
+ movl $0, %eax
+ pushl %eax
  call error_pyobj
- movl %eax, %edi
+ movl %eax, %eax
  addl $4, %esp
+ movl %eax, -4(%ebp)
  jmp endif18
  else18:
- movl -4(%ebp), %eax
+ movl -12(%ebp), %eax
  pushl %eax
  call project_int
  movl %eax, %eax
@@ -429,19 +422,20 @@ main:
  movl %eax, %edi
  pushl %ebx
  call project_bool
+ movl %eax, %ecx
+ addl $4, %esp
+ movl %edi, %eax
+ addl %ecx, %eax
+ pushl %eax
+ call inject_int
  movl %eax, %eax
  addl $4, %esp
- movl %edi, %ecx
- addl %eax, %ecx
- pushl %ecx
- call inject_int
- movl %eax, %edi
- addl $4, %esp
+ movl %eax, -4(%ebp)
  endif18:
  endif17:
  jmp endif16
  else16:
- movl -4(%ebp), %eax
+ movl -12(%ebp), %eax
  pushl %eax
  call is_bool
  movl %eax, %eax
@@ -456,7 +450,7 @@ main:
  cmpl $0, %eax
  je else20
  then20:
- movl -4(%ebp), %eax
+ movl -12(%ebp), %eax
  pushl %eax
  call project_bool
  movl %eax, %eax
@@ -464,14 +458,15 @@ main:
  movl %eax, %edi
  pushl %ebx
  call project_bool
+ movl %eax, %ecx
+ addl $4, %esp
+ movl %edi, %eax
+ addl %ecx, %eax
+ pushl %eax
+ call inject_int
  movl %eax, %eax
  addl $4, %esp
- movl %edi, %ecx
- addl %eax, %ecx
- pushl %ecx
- call inject_int
- movl %eax, %edi
- addl $4, %esp
+ movl %eax, -4(%ebp)
  jmp endif20
  else20:
  pushl %ebx
@@ -481,13 +476,15 @@ main:
  cmpl $0, %eax
  je else21
  then21:
- pushl $0
+ movl $0, %eax
+ pushl %eax
  call error_pyobj
- movl %eax, %edi
+ movl %eax, %eax
  addl $4, %esp
+ movl %eax, -4(%ebp)
  jmp endif21
  else21:
- movl -4(%ebp), %eax
+ movl -12(%ebp), %eax
  pushl %eax
  call project_bool
  movl %eax, %eax
@@ -495,19 +492,21 @@ main:
  movl %eax, %edi
  pushl %ebx
  call project_int
- movl %eax, %ecx
+ movl %eax, %eax
  addl $4, %esp
- movl %edi, %eax
- addl %ecx, %eax
+ movl %edi, %ecx
+ addl %eax, %ecx
+ movl %ecx, %eax
  pushl %eax
  call inject_int
- movl %eax, %edi
+ movl %eax, %eax
  addl $4, %esp
+ movl %eax, -4(%ebp)
  endif21:
  endif20:
  jmp endif19
  else19:
- movl -4(%ebp), %eax
+ movl -12(%ebp), %eax
  pushl %eax
  call is_big
  movl %eax, %eax
@@ -522,7 +521,7 @@ main:
  cmpl $0, %eax
  je else23
  then23:
- movl -4(%ebp), %eax
+ movl -12(%ebp), %eax
  pushl %eax
  call project_big
  movl %eax, %eax
@@ -539,14 +538,17 @@ main:
  addl $8, %esp
  pushl %eax
  call inject_big
- movl %eax, %edi
+ movl %eax, %eax
  addl $4, %esp
+ movl %eax, -4(%ebp)
  jmp endif23
  else23:
- pushl $0
+ movl $0, %eax
+ pushl %eax
  call error_pyobj
- movl %eax, %edi
+ movl %eax, %eax
  addl $4, %esp
+ movl %eax, -4(%ebp)
  endif23:
  jmp endif22
  endif22:
@@ -556,7 +558,8 @@ main:
  call inject_int
  movl %eax, %ebx
  addl $4, %esp
- pushl %edi
+ movl -4(%ebp), %eax
+ pushl %eax
  call is_int
  movl %eax, %eax
  addl $4, %esp
@@ -570,17 +573,18 @@ main:
  cmpl $0, %eax
  je else25
  then25:
- pushl %edi
- call project_int
- movl %eax, %edi
- addl $4, %esp
- pushl %ebx
+ movl -4(%ebp), %eax
+ pushl %eax
  call project_int
  movl %eax, %eax
  addl $4, %esp
- movl %edi, %ecx
- addl %eax, %ecx
- movl %ecx, %eax
+ movl %eax, %edi
+ pushl %ebx
+ call project_int
+ movl %eax, %ecx
+ addl $4, %esp
+ movl %edi, %eax
+ addl %ecx, %eax
  pushl %eax
  call inject_int
  movl %eax, %eax
@@ -603,17 +607,18 @@ main:
  movl %eax, -8(%ebp)
  jmp endif26
  else26:
- pushl %edi
+ movl -4(%ebp), %eax
+ pushl %eax
  call project_int
- movl %eax, %edi
- addl $4, %esp
- pushl %ebx
- call project_bool
  movl %eax, %eax
  addl $4, %esp
- movl %edi, %ecx
- addl %eax, %ecx
- movl %ecx, %eax
+ movl %eax, %edi
+ pushl %ebx
+ call project_bool
+ movl %eax, %ecx
+ addl $4, %esp
+ movl %edi, %eax
+ addl %ecx, %eax
  pushl %eax
  call inject_int
  movl %eax, %eax
@@ -623,7 +628,8 @@ main:
  endif25:
  jmp endif24
  else24:
- pushl %edi
+ movl -4(%ebp), %eax
+ pushl %eax
  call is_bool
  movl %eax, %eax
  addl $4, %esp
@@ -637,10 +643,12 @@ main:
  cmpl $0, %eax
  je else28
  then28:
- pushl %edi
+ movl -4(%ebp), %eax
+ pushl %eax
  call project_bool
- movl %eax, %edi
+ movl %eax, %eax
  addl $4, %esp
+ movl %eax, %edi
  pushl %ebx
  call project_bool
  movl %eax, %ecx
@@ -669,16 +677,19 @@ main:
  movl %eax, -8(%ebp)
  jmp endif29
  else29:
- pushl %edi
+ movl -4(%ebp), %eax
+ pushl %eax
  call project_bool
- movl %eax, %edi
+ movl %eax, %eax
  addl $4, %esp
+ movl %eax, %edi
  pushl %ebx
  call project_int
- movl %eax, %ecx
+ movl %eax, %eax
  addl $4, %esp
- movl %edi, %eax
- addl %ecx, %eax
+ movl %edi, %ecx
+ addl %eax, %ecx
+ movl %ecx, %eax
  pushl %eax
  call inject_int
  movl %eax, %eax
@@ -688,7 +699,8 @@ main:
  endif28:
  jmp endif27
  else27:
- pushl %edi
+ movl -4(%ebp), %eax
+ pushl %eax
  call is_big
  movl %eax, %eax
  addl $4, %esp
@@ -702,10 +714,12 @@ main:
  cmpl $0, %eax
  je else31
  then31:
- pushl %edi
+ movl -4(%ebp), %eax
+ pushl %eax
  call project_big
- movl %eax, %edi
+ movl %eax, %eax
  addl $4, %esp
+ movl %eax, %edi
  pushl %ebx
  call project_big
  movl %eax, %eax

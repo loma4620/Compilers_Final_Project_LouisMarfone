@@ -7,13 +7,13 @@ main:
  pushl %ebx
  pushl $1
  call inject_int
- movl %eax, %edi
+ movl %eax, %ebx
  addl $4, %esp
  pushl $5
  call inject_int
- movl %eax, %ebx
+ movl %eax, %edi
  addl $4, %esp
- pushl %edi
+ pushl %ebx
  call is_true
  movl %eax, %eax
  addl $4, %esp
@@ -28,12 +28,12 @@ main:
  cmpl $0, %eax
  je else1
  then1:
- movl %edi, %ecx
+ movl %ebx, %eax
  jmp endif1
  else1:
- movl %ebx, %ecx
+ movl %edi, %eax
  endif1:
- pushl %ecx
+ pushl %eax
  call print_any
  addl $4, %esp
  movl $0, %eax 

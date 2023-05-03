@@ -1,44 +1,174 @@
-t0 = 1 + 2
-t1 = t0 + 3
-t2 = t1 + 4
-t3 = t2 + 5
-print(t3)
+def lambda_0(free_vars_2, y2):
+    x1 = free_vars_2[0]
+    t0 = x1[0]
+    t1 = t0 + y2
+    return t1
+
+def lambda_2(free_vars_2, x1):
+    x1H = [x1]
+    lambda_0 = free_vars_2[0]
+    t2 = get_fun_ptr(lambda_0)
+    t3 = get_free_vars(lambda_0)
+    t4 = t2(t3, 2)
+    return t4
+t5 = []
+nl0 = create_closure(lambda_2, t5)
+t6 = [lambda_0]
+nl0 = set_free_vars(nl0, t6)
+t7 = get_fun_ptr(nl0)
+t8 = get_free_vars(nl0)
+t9 = t7(t8, 23)
+print(t9)
 
 
 Module(
     body=[
+        FunctionDef(
+            name='lambda_0',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='free_vars_2'),
+                    arg(arg='y2')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='x1', ctx=Load())],
+                    value=Subscript(
+                        value=Name(id='free_vars_2', ctx=Load()),
+                        slice=Constant(value=0),
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='t0', ctx=Store())],
+                    value=Subscript(
+                        value=Name(id='x1', ctx=Load()),
+                        slice=Constant(value=0),
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='t1', ctx=Store())],
+                    value=BinOp(
+                        left=Name(id='t0', ctx=Load()),
+                        op=Add(),
+                        right=Name(id='y2', ctx=Load()))),
+                Return(
+                    value=Name(id='t1', ctx=Load()))],
+            decorator_list=[]),
+        FunctionDef(
+            name='lambda_2',
+            args=arguments(
+                posonlyargs=[],
+                args=[
+                    arg(arg='free_vars_2'),
+                    arg(arg='x1')],
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='x1H', ctx=Load())],
+                    value=List(
+                        elts=[
+                            Name(id='x1', ctx=Load())],
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='lambda_0', ctx=Load())],
+                    value=Subscript(
+                        value=Name(id='free_vars_2', ctx=Load()),
+                        slice=Constant(value=0),
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='t2', ctx=Store())],
+                    value=Call(
+                        func=Name(id='get_fun_ptr', ctx=Load()),
+                        args=[
+                            Name(id='lambda_0', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='t3', ctx=Store())],
+                    value=Call(
+                        func=Name(id='get_free_vars'),
+                        args=[
+                            Name(id='lambda_0', ctx=Load())],
+                        keywords=[])),
+                Assign(
+                    targets=[
+                        Name(id='t4', ctx=Store())],
+                    value=Call(
+                        func=Name(id='t2', ctx=Load()),
+                        args=[
+                            Name(id='t3', ctx=Load()),
+                            Constant(value=2)],
+                        keywords=[])),
+                Return(
+                    value=Name(id='t4', ctx=Load()))],
+            decorator_list=[]),
         Assign(
             targets=[
-                Name(id='t0', ctx=Store())],
-            value=BinOp(
-                left=Constant(value=1),
-                op=Add(),
-                right=Constant(value=2))),
+                Name(id='t5', ctx=Store())],
+            value=List(elts=[], ctx=Load())),
         Assign(
             targets=[
-                Name(id='t1', ctx=Store())],
-            value=BinOp(
-                left=Name(id='t0', ctx=Load()),
-                op=Add(),
-                right=Constant(value=3))),
+                Name(id='nl0', ctx=Load())],
+            value=Call(
+                func=Name(id='create_closure', ctx=Load()),
+                args=[
+                    Name(id='lambda_2', ctx=Load()),
+                    Name(id='t5', ctx=Load())],
+                keywords=[])),
         Assign(
             targets=[
-                Name(id='t2', ctx=Store())],
-            value=BinOp(
-                left=Name(id='t1', ctx=Load()),
-                op=Add(),
-                right=Constant(value=4))),
+                Name(id='t6', ctx=Store())],
+            value=List(
+                elts=[
+                    Name(id='lambda_0', ctx=Load())],
+                ctx=Load())),
         Assign(
             targets=[
-                Name(id='t3', ctx=Store())],
-            value=BinOp(
-                left=Name(id='t2', ctx=Load()),
-                op=Add(),
-                right=Constant(value=5))),
+                Name(id='nl0', ctx=Load())],
+            value=Call(
+                func=Name(id='set_free_vars', ctx=Load()),
+                args=[
+                    Name(id='nl0', ctx=Load()),
+                    Name(id='t6', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='t7', ctx=Store())],
+            value=Call(
+                func=Name(id='get_fun_ptr', ctx=Load()),
+                args=[
+                    Name(id='nl0', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='t8', ctx=Store())],
+            value=Call(
+                func=Name(id='get_free_vars'),
+                args=[
+                    Name(id='nl0', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='t9', ctx=Store())],
+            value=Call(
+                func=Name(id='t7', ctx=Load()),
+                args=[
+                    Name(id='t8', ctx=Load()),
+                    Constant(value=23)],
+                keywords=[])),
         Expr(
             value=Call(
                 func=Name(id='print', ctx=Load()),
                 args=[
-                    Name(id='t3', ctx=Load())],
+                    Name(id='t9', ctx=Load())],
                 keywords=[]))],
     type_ignores=[])

@@ -8,34 +8,32 @@ main:
  pushl %esi
  pushl $1
  call inject_int
- movl %eax, %edi
+ movl %eax, %ebx
  addl $4, %esp
  pushl $2
  call inject_int
- movl %eax, %ebx
+ movl %eax, %edi
  addl $4, %esp
  call create_dict
  pushl %eax
  call inject_big
- movl %eax, %ecx
+ movl %eax, %esi
  addl $4, %esp
- movl %ecx, -4(%ebp)
- movl %ebx, %eax
- movl %edi, %ecx
- movl -4(%ebp), %edx
- pushl %eax
- pushl %ecx
- pushl %edx
+ pushl %edi
+ pushl %ebx
+ pushl %esi
  call set_subscript
  movl %eax, %eax
  addl $12, %esp
- pushl $1
+ movl $1, %eax
+ pushl %eax
  call inject_int
- movl %eax, %esi
+ movl %eax, %ecx
  addl $4, %esp
+ movl %ecx, -4(%ebp)
  pushl $2
  call inject_int
- movl %eax, %edi
+ movl %eax, %ebx
  addl $4, %esp
  pushl $3
  call inject_int
@@ -47,34 +45,14 @@ main:
  addl $4, %esp
  pushl %eax
  call inject_big
- movl %eax, %ebx
+ movl %eax, %edi
  addl $4, %esp
  pushl $0
  call inject_int
  movl %eax, %ecx
  addl $4, %esp
- pushl %esi
- pushl %ecx
- pushl %ebx
- call set_subscript
- movl %eax, %ecx
- addl $12, %esp
- pushl $1
- call inject_int
- movl %eax, %ecx
- addl $4, %esp
- pushl %edi
- pushl %ecx
- pushl %ebx
- call set_subscript
- movl %eax, %ecx
- addl $12, %esp
- pushl $2
- call inject_int
- movl %eax, %ecx
- addl $4, %esp
  movl -4(%ebp), %eax
- movl %ebx, %edx
+ movl %edi, %edx
  pushl %eax
  pushl %ecx
  pushl %edx
@@ -82,7 +60,27 @@ main:
  movl %eax, %eax
  addl $12, %esp
  movl %eax, %ecx
+ pushl $1
+ call inject_int
+ movl %eax, %ecx
+ addl $4, %esp
  pushl %ebx
+ pushl %ecx
+ pushl %edi
+ call set_subscript
+ movl %eax, %ecx
+ addl $12, %esp
+ pushl $2
+ call inject_int
+ movl %eax, %ecx
+ addl $4, %esp
+ pushl %esi
+ pushl %ecx
+ pushl %edi
+ call set_subscript
+ movl %eax, %ecx
+ addl $12, %esp
+ pushl %edi
  call print_any
  addl $4, %esp
  movl $0, %eax 

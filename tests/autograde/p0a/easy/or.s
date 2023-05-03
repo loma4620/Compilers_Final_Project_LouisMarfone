@@ -20,11 +20,12 @@ main:
  cmpl $0, %eax
  je else0
  then0:
- movl %edi, %ebx
+ movl %edi, %eax
  jmp endif0
  else0:
+ movl %ebx, %eax
  endif0:
- pushl %ebx
+ pushl %eax
  call print_any
  addl $4, %esp
  movl $0, %eax 

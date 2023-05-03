@@ -34,9 +34,9 @@ main:
  pushl %eax
  pushl $lambda_0
  call create_closure
- movl %eax, %ebx
+ movl %eax, %edi
  addl $8, %esp
- pushl %ebx
+ pushl %edi
  call inject_big
  movl %eax, %ebx
  addl $4, %esp
@@ -59,9 +59,9 @@ main:
  pushl %edi
  pushl %eax
  call set_free_vars
- movl %eax, %eax
+ movl %eax, %edi
  addl $8, %esp
- pushl %eax
+ pushl %edi
  call inject_big
  movl %eax, %ebx
  addl $4, %esp

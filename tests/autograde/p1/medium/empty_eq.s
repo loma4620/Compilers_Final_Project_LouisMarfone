@@ -174,9 +174,9 @@ main:
  pushl %eax
  pushl %edi
  call equal
- movl %eax, %ecx
+ movl %eax, %eax
  addl $8, %esp
- pushl %ecx
+ pushl %eax
  call inject_bool
  movl %eax, %edi
  addl $4, %esp
@@ -184,9 +184,9 @@ main:
  else7:
  pushl %ebx
  call is_bool
- movl %eax, %eax
+ movl %eax, %ecx
  addl $4, %esp
- cmpl $0, %eax
+ cmpl $0, %ecx
  je else8
  then8:
  pushl $0

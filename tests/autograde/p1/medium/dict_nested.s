@@ -27,20 +27,20 @@ main:
  addl $12, %esp
  pushl $2
  call inject_int
- movl %eax, %edi
+ movl %eax, %ebx
  addl $4, %esp
  call create_dict
  pushl %eax
  call inject_big
- movl %eax, %ebx
+ movl %eax, %edi
  addl $4, %esp
  pushl %esi
- pushl %edi
  pushl %ebx
+ pushl %edi
  call set_subscript
  movl %eax, %eax
  addl $12, %esp
- pushl %ebx
+ pushl %edi
  call print_any
  addl $4, %esp
  movl $0, %eax 

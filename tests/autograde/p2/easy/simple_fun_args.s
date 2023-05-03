@@ -56,11 +56,11 @@ lambda_0:
  addl $4, %esp
  pushl %ebx
  call project_bool
- movl %eax, %eax
+ movl %eax, %ecx
  addl $4, %esp
- movl %edi, %ecx
- addl %eax, %ecx
- pushl %ecx
+ movl %edi, %eax
+ addl %ecx, %eax
+ pushl %eax
  call inject_int
  movl %eax, %edi
  addl $4, %esp
@@ -88,11 +88,11 @@ lambda_0:
  addl $4, %esp
  pushl %ebx
  call project_bool
- movl %eax, %ecx
+ movl %eax, %eax
  addl $4, %esp
- movl %edi, %eax
- addl %ecx, %eax
- pushl %eax
+ movl %edi, %ecx
+ addl %eax, %ecx
+ pushl %ecx
  call inject_int
  movl %eax, %edi
  addl $4, %esp
@@ -117,11 +117,11 @@ lambda_0:
  addl $4, %esp
  pushl %ebx
  call project_int
- movl %eax, %eax
+ movl %eax, %ecx
  addl $4, %esp
- movl %edi, %ecx
- addl %eax, %ecx
- pushl %ecx
+ movl %edi, %eax
+ addl %ecx, %eax
+ pushl %eax
  call inject_int
  movl %eax, %edi
  addl $4, %esp
@@ -154,9 +154,9 @@ lambda_0:
  pushl %eax
  pushl %edi
  call add
- movl %eax, %eax
+ movl %eax, %edi
  addl $8, %esp
- pushl %eax
+ pushl %edi
  call inject_big
  movl %eax, %edi
  addl $4, %esp
@@ -205,7 +205,7 @@ main:
  addl $8, %esp
  pushl %eax
  call inject_big
- movl %eax, %ebx
+ movl %eax, %edi
  addl $4, %esp
  pushl $0
  call inject_int
@@ -217,44 +217,44 @@ main:
  addl $4, %esp
  pushl %eax
  call inject_big
- movl %eax, %edi
+ movl %eax, %ebx
  addl $4, %esp
- pushl %ebx
+ pushl %edi
  call project_big
  movl %eax, %eax
  addl $4, %esp
- pushl %edi
+ pushl %ebx
  pushl %eax
  call set_free_vars
  movl %eax, %eax
  addl $8, %esp
  pushl %eax
  call inject_big
- movl %eax, %ebx
- addl $4, %esp
- pushl %ebx
- call get_fun_ptr
  movl %eax, %edi
  addl $4, %esp
- pushl %ebx
+ pushl %edi
+ call get_fun_ptr
+ movl %eax, %ebx
+ addl $4, %esp
+ pushl %edi
  call get_free_vars
  movl %eax, %esi
  addl $4, %esp
  pushl $2
  call inject_int
- movl %eax, %ebx
+ movl %eax, %edi
  addl $4, %esp
  pushl $3
  call inject_int
  movl %eax, %eax
  addl $4, %esp
  pushl %eax
- pushl %ebx
+ pushl %edi
  pushl %esi
- call %edi
- movl %eax, %eax
+ call %ebx
+ movl %eax, %ebx
  addl $12, %esp
- pushl %eax
+ pushl %ebx
  call print_any
  addl $4, %esp
  movl $0, %eax 

@@ -1,0 +1,32 @@
+Head:True
+0
+set()
+[]
+['x1', 'free_vars_2']
+['x1', 't40', 'free_vars_2']
+['x1', 't41', 'free_vars_2']
+['x1', 'x1H', 'free_vars_2']
+['x1', 'x1H', 'free_vars_2', 't12']
+['free_vars_2']
+['free_vars_2', 't13']
+['lambda_0']
+['lambda_0', 't2']
+['t3', 't2']
+['t3', 't2', 't42']
+['t4']
+[]
+
+['def', 'lambda_2', 'free_vars_2', 'x1']
+['call', 'inject_int', 1, 't40']
+['call', 'create_list', 't40', 't41']
+['call', 'inject_big', 't41', 'x1H']
+['call', 'inject_int', 0, 't12']
+['call', 'set_subscript', 'x1', 't12', 'x1H', 't12']
+['call', 'inject_int', 0, 't13']
+['call', 'get_subscript', 't13', 'free_vars_2', 'lambda_0']
+['call', 'get_fun_ptr', 'lambda_0', 't2']
+['call', 'get_free_vars', 'lambda_0', 't3']
+['call', 'inject_int', 2, 't42']
+['call', 't2', 't42', 't3', 't4']
+['ret', 't4']
+

@@ -95,11 +95,11 @@ main:
  addl $4, %esp
  pushl %esi
  call project_bool
- movl %eax, %eax
+ movl %eax, %ecx
  addl $4, %esp
- movl %edi, %ecx
- addl %eax, %ecx
- pushl %ecx
+ movl %edi, %eax
+ addl %ecx, %eax
+ pushl %eax
  call inject_int
  movl %eax, %ebx
  addl $4, %esp

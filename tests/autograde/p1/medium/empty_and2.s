@@ -6,16 +6,15 @@ main:
  pushl %edi
  pushl %ebx
  call create_dict
- movl %eax, %ecx
- pushl %ecx
+ pushl %eax
  call inject_big
- movl %eax, %edi
+ movl %eax, %ebx
  addl $4, %esp
  pushl $1
  call inject_int
- movl %eax, %ebx
+ movl %eax, %edi
  addl $4, %esp
- pushl %edi
+ pushl %ebx
  call is_true
  movl %eax, %eax
  addl $4, %esp
@@ -32,9 +31,9 @@ main:
  then1:
  jmp endif1
  else1:
- movl %ebx, %edi
+ movl %edi, %ebx
  endif1:
- pushl %edi
+ pushl %ebx
  call print_any
  addl $4, %esp
  movl $0, %eax 

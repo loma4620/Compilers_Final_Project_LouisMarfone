@@ -6,7 +6,8 @@ main:
  pushl %edi
  pushl %ebx
  call create_dict
- pushl %eax
+ movl %eax, %edi
+ pushl %edi
  call inject_big
  movl %eax, %ebx
  addl $4, %esp
@@ -51,11 +52,12 @@ main:
  cmpl $0, %eax
  je else1
  then1:
- movl %edi, %ebx
+ movl %edi, %eax
  jmp endif1
  else1:
+ movl %ebx, %eax
  endif1:
- pushl %ebx
+ pushl %eax
  call print_any
  addl $4, %esp
  movl $0, %eax 

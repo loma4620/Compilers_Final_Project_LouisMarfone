@@ -184,11 +184,12 @@ main:
  cmpl $0, %eax
  je else9
  then9:
+ movl %edi, %eax
  jmp endif9
  else9:
- movl %ebx, %edi
+ movl %ebx, %eax
  endif9:
- pushl %edi
+ pushl %eax
  call print_any
  addl $4, %esp
  movl $0, %eax 

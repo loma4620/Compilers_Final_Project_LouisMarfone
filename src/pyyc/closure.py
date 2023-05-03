@@ -16,7 +16,7 @@ class freeVarVisitor(ast.NodeVisitor):
     
     def visit_Name(self, node):
         # print(node.id)
-        if (node.id != 'create_closure') and (node.id != 'set_free_vars'):
+        if (node.id != 'create_closure') and (node.id != 'set_free_vars') and (node.id != 'print'):
             varScope = int(node.id[len(node.id)-1])
             if (varScope != self.scope):
                 self.freeVars.add(node.id)
@@ -46,14 +46,69 @@ class unifyLambdas(ast.NodeTransformer):
         return node
 
     def visit_Lambda(self, node):
+        nestedFreesNodes = []
+        if (isinstance(node.body, Lambda)):
+            nestedFreeCounter = freeVarVisitor(node.body.varScope)
+            nestedFreeCounter.visit(node.body.body)
+            nestedFreeVars = list(nestedFreeCounter.freeVars)
+            for x in nestedFreeVars:
+                self.heapifyVars.add(x)
+
+            for i in nestedFreeVars:
+                nestedFreesNodes.append(ast.Name(id=i, ctx=Load()))
         self.generic_visit(node)
 
         if isinstance(node.parent, Assign):
             lambdaName = node.parent.targets[0].id
         else:
-            lambdaName = 'lambda_' + str(node.funcScope)
-            self.lambdaCounter = node.funcScope + 1
+            lambdaName = 'lambda_' + str(self.lambdaCounter)
+            self.lambdaCounter = node.funcScope + self.lambdaCounter + 1
             # self.lambdaCounter += 1
+
+        if (isinstance(node.body, Name) and (node.body.id[0:len(node.body.id)-1] == 'lambda_')):
+            newLambdaBody = []
+
+            newBodyClosure = ast.Assign(
+                targets=[ast.Name(id=node.body.id, ctx=Load())],
+                value=ast.Call(
+                    func=ast.Name(id='create_closure', ctx=Load()), 
+                    args=[
+                        ast.Name(id=node.body.id, ctx=Load()), 
+                        List(
+                            elts=[],
+                            ctx=Load()
+                        )
+                    ],
+                    keywords=[]
+                )
+            )
+
+            newLambdaBody.append(newBodyClosure)
+
+            newBodySetFrees = ast.Assign(
+                targets=[ast.Name(id=node.body.id, ctx=Load())],
+                value=ast.Call(
+                    func=ast.Name(id='set_free_vars', ctx=Load()), 
+                    args=[
+                        ast.Name(id=node.body.id, ctx=Load()), 
+                        List(
+                            elts=nestedFreesNodes,
+                            ctx=Load()
+                        )
+                    ],
+                    keywords=[]
+                )
+            )
+
+            newLambdaBody.append(newBodySetFrees)
+
+            newBodyReturn = ast.Return(
+                value=ast.Name(id=node.body.id, ctx=Load())
+            )
+
+            newLambdaBody.append(newBodyReturn)
+        else:
+            newLambdaBody = [ast.Return(value=node.body)]
 
         lambdaFunc = ast.FunctionDef(
             name=lambdaName,
@@ -64,9 +119,7 @@ class unifyLambdas(ast.NodeTransformer):
                 kw_defaults=node.args.kw_defaults,
                 defaults=node.args.defaults
             ),
-            body=[ast.Return(
-                value=node.body
-            )],
+            body=newLambdaBody,
             decorator_list=[]
         )
 
@@ -192,7 +245,7 @@ class heapifyVisitor(ast.NodeTransformer):
             return node
 
         if (isinstance(node.parent, Call)):
-            if (isinstance(node.parent.func, Name) and (node.parent.func.id in self.closureFuncs)):
+            if (isinstance(node.parent.func, Name) and (node.parent.func.id in self.closureFuncs) and (node.id not in self.heapifyVars)):
                 return node
         
         if (isinstance(node.parent, List) and isinstance(node.parent.parent, Call)):
@@ -204,12 +257,15 @@ class heapifyVisitor(ast.NodeTransformer):
                 varname = node.id + 'H'
             else:
                 varname = node.id
-
-            replacementNode = ast.Subscript(
-                value=ast.Name(id=varname, ctx=Load()), 
-                slice=ast.Constant(value=0),
-                ctx=Load()
-            )
+            
+            if (isinstance(node.parent, List) and isinstance(node.parent.parent, Call) and (node.parent.parent.func.id == 'set_free_vars')):
+                replacementNode = ast.Name(id=varname, ctx=Load())
+            else:
+                replacementNode = ast.Subscript(
+                    value=ast.Name(id=varname, ctx=Load()), 
+                    slice=ast.Constant(value=0),
+                    ctx=Load()
+                )
             return replacementNode
         
         return node
@@ -398,13 +454,14 @@ class closureVisitor(ast.NodeTransformer):
             newNode = functionCloser.visit(n)
             for x in functionCloser.newBody:
                 newFunctionBody.append(x)
+            self.closureAdds += functionCloser.closureAdds
             self.lambdaCounter = functionCloser.lambdaCounter
         node.body = newFunctionBody
 
         self.lambdaCounter = functionCloser.lambdaCounter
         for i in functionCloser.heapifyVars:
             self.heapifyVars.add(i)
-        self.closureAdds += functionCloser.closureAdds
+        # self.closureAdds += functionCloser.closureAdds
 
         freeVarsParam = ast.arg(arg='free_vars_' + str(self.lambdaCounter))
 
@@ -478,9 +535,25 @@ class closureVisitor(ast.NodeTransformer):
                 )
 
                 self.newBody.append(setFreesNode)
-                return node
             else:
-                self.closureAdds.append(node)
+                if (isinstance(node.parent, Module)):
+                    newArgs = node.args.args
+                    newArgs.insert(0, freeVarsParam)
+
+                    closedFunc = ast.FunctionDef(
+                        name=node.name,
+                        args=ast.arguments(
+                            posonlyargs=node.args.posonlyargs,
+                            args=newArgs,
+                            kwonlyargs=node.args.kwonlyargs,
+                            kw_defaults=node.args.kw_defaults,
+                            defaults=node.args.defaults
+                        ),
+                        body=node.body,
+                        decorator_list=node.decorator_list
+                    )
+
+                    self.newBody.append(closedFunc)
         else:
             newArgs = node.args.args
             newArgs.insert(0, freeVarsParam)
@@ -535,8 +608,8 @@ class closureVisitor(ast.NodeTransformer):
                 )
             )
 
-            for x in self.closureAdds:
-                self.newBody.append(x)
+            for func in self.closureAdds:
+                self.newBody.append(func)
             
             self.newBody.append(closedFunc)
             self.newBody.append(closureNode)

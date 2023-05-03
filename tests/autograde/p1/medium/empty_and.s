@@ -7,9 +7,9 @@ main:
  pushl %ebx
  pushl $0
  call inject_int
- movl %eax, %eax
+ movl %eax, %edi
  addl $4, %esp
- pushl %eax
+ pushl %edi
  call create_list
  movl %eax, %eax
  addl $4, %esp
@@ -36,12 +36,11 @@ main:
  cmpl $0, %eax
  je else1
  then1:
- movl %edi, %eax
  jmp endif1
  else1:
- movl %ebx, %eax
+ movl %ebx, %edi
  endif1:
- pushl %eax
+ pushl %edi
  call print_any
  addl $4, %esp
  movl $0, %eax 

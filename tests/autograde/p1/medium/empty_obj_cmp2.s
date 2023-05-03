@@ -6,16 +6,17 @@ main:
  pushl %edi
  pushl $0
  call inject_int
- movl %eax, %edi
+ movl %eax, %ecx
  addl $4, %esp
- pushl %edi
+ pushl %ecx
  call create_list
- movl %eax, %edi
+ movl %eax, %eax
  addl $4, %esp
- pushl %edi
+ pushl %eax
  call inject_big
- movl %eax, %edi
+ movl %eax, %ecx
  addl $4, %esp
+ movl %ecx, %edi
  pushl $0
  call inject_int
  movl %eax, %eax
@@ -25,9 +26,9 @@ main:
  movzbl %al, %ecx
  pushl %ecx
  call inject_bool
- movl %eax, %edi
+ movl %eax, %ecx
  addl $4, %esp
- pushl %edi
+ pushl %ecx
  call print_any
  addl $4, %esp
  movl $0, %eax 

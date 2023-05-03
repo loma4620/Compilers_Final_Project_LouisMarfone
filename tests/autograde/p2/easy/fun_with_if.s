@@ -141,9 +141,9 @@ lambda_0:
  endif0:
  pushl %ebx
  call is_true
- movl %eax, %edi
+ movl %eax, %eax
  addl $4, %esp
- cmpl $0, %edi
+ cmpl $0, %eax
  je else6
  then6:
  pushl $1
@@ -230,27 +230,27 @@ main:
  pushl %eax
  pushl %edi
  call %ebx
- movl %eax, %eax
+ movl %eax, %ebx
  addl $8, %esp
- pushl %eax
+ pushl %ebx
  call is_true
- movl %eax, %eax
+ movl %eax, %edi
  addl $4, %esp
- cmpl $0, %eax
+ cmpl $0, %edi
  je else7
  then7:
  pushl $10
  call inject_int
- movl %eax, %edi
+ movl %eax, %eax
  addl $4, %esp
  jmp endif7
  else7:
  pushl $20
  call inject_int
- movl %eax, %edi
+ movl %eax, %eax
  addl $4, %esp
  endif7:
- pushl %edi
+ pushl %eax
  call print_any
  addl $4, %esp
  movl $0, %eax 

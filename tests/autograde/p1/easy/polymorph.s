@@ -7,25 +7,26 @@ main:
  pushl %ebx
  pushl %esi
  call eval_input_pyobj
- pushl %eax
+ movl %eax, %ecx
+ pushl %ecx
  call is_true
- movl %eax, %edi
+ movl %eax, %eax
  addl $4, %esp
- cmpl $0, %edi
+ cmpl $0, %eax
  je else0
  then0:
- pushl $42
- call inject_int
- movl %eax, %esi
- addl $4, %esp
- jmp endif0
- else0:
- movl $1, %eax
+ movl $42, %eax
  pushl %eax
  call inject_int
  movl %eax, %ecx
  addl $4, %esp
  movl %ecx, -4(%ebp)
+ jmp endif0
+ else0:
+ pushl $1
+ call inject_int
+ movl %eax, %esi
+ addl $4, %esp
  pushl $2
  call inject_int
  movl %eax, %ebx
@@ -44,14 +45,15 @@ main:
  addl $4, %esp
  pushl %eax
  call inject_big
- movl %eax, %esi
+ movl %eax, %ecx
  addl $4, %esp
+ movl %ecx, -4(%ebp)
  pushl $0
  call inject_int
  movl %eax, %ecx
  addl $4, %esp
- movl -4(%ebp), %eax
- movl %esi, %edx
+ movl %esi, %eax
+ movl -4(%ebp), %edx
  pushl %eax
  pushl %ecx
  pushl %edx
@@ -63,24 +65,31 @@ main:
  call inject_int
  movl %eax, %ecx
  addl $4, %esp
- pushl %ebx
+ movl %ebx, %eax
+ movl -4(%ebp), %edx
+ pushl %eax
  pushl %ecx
- pushl %esi
+ pushl %edx
  call set_subscript
- movl %eax, %ecx
+ movl %eax, %eax
  addl $12, %esp
+ movl %eax, %ecx
  pushl $2
  call inject_int
  movl %eax, %ecx
  addl $4, %esp
- pushl %edi
+ movl %edi, %eax
+ movl -4(%ebp), %edx
+ pushl %eax
  pushl %ecx
- pushl %esi
+ pushl %edx
  call set_subscript
- movl %eax, %ecx
+ movl %eax, %eax
  addl $12, %esp
+ movl %eax, %ecx
  endif0:
- pushl %esi
+ movl -4(%ebp), %eax
+ pushl %eax
  call print_any
  addl $4, %esp
  movl $0, %eax 

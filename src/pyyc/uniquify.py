@@ -148,8 +148,8 @@ class functionCounter(ast.NodeVisitor):
 class functionRearranger(ast.NodeTransformer):
     def __init__(self, undeclaredFunctions):
         self.undeclaredFunctions = undeclaredFunctions
-        self.declaredFunctions = []
         self.disputedFunctions = []
+        self.declaredFunctions = []
         self.newBody = []
 
     def getBodyIndex(self, function):
@@ -175,22 +175,18 @@ class functionRearranger(ast.NodeTransformer):
     
     def visit_FunctionDef(self, node):
         self.generic_visit(node)
-        # print(node.name)
-        # print(self.disputedFunctions)
-        # print('\n')
 
-        if (node.name not in self.declaredFunctions):
-            self.declaredFunctions.append(node.name)
+        if (node.name[0:len(node.name)-1] not in self.declaredFunctions):
+            self.declaredFunctions.append(node.name[0:len(node.name)-1])
         
-        if (node.name in self.undeclaredFunctions):
-            self.undeclaredFunctions.remove(node.name)
-        
-        # return node
+        if (node.name[0:len(node.name)-1] in self.undeclaredFunctions):
+            self.undeclaredFunctions.remove(node.name[0:len(node.name)-1])
 
         if isinstance(node.parent, Module):
             if (len(self.disputedFunctions) == 0):
                 self.newBody.remove(node)
                 self.newBody.insert(0, node)
+                self.disputedFunctions = []
                 return node
             else:
                 self.disputedFunctions = []
@@ -199,17 +195,11 @@ class functionRearranger(ast.NodeTransformer):
             return node
 
     def visit_Name(self, node):
-        if (isinstance(node.parent, Call)) and (node.id in self.undeclaredFunctions) and (node.id not in self.disputedFunctions):
-            self.disputedFunctions.append(node.id)
+        if (isinstance(node.parent, Call)) and ((node.id[0:len(node.id)-1] in self.undeclaredFunctions) or (node.id[0:len(node.id)-1] in self.declaredFunctions)):
+            if (node.id[0:len(node.id)-1] not in self.disputedFunctions):
+                self.disputedFunctions.append(node.id[0:len(node.id)-1])
 
         return node        
-
-        
-
-        
-
-
-            
         
             
 

@@ -59,9 +59,9 @@ main:
  pushl %edi
  pushl %eax
  call set_free_vars
- movl %eax, %eax
+ movl %eax, %edi
  addl $8, %esp
- pushl %eax
+ pushl %edi
  call inject_big
  movl %eax, %ebx
  addl $4, %esp

@@ -2,7 +2,7 @@
 main:
  pushl %ebp
  movl %esp, %ebp
- subl $12, %esp
+ subl $8, %esp
  pushl %edi
  pushl %ebx
  pushl %esi
@@ -10,12 +10,10 @@ main:
  call inject_int
  movl %eax, %ebx
  addl $4, %esp
- movl $2, %eax
- pushl %eax
+ pushl $2
  call inject_int
- movl %eax, %ecx
+ movl %eax, %esi
  addl $4, %esp
- movl %ecx, -4(%ebp)
  pushl $3
  call inject_int
  movl %eax, %edi
@@ -30,24 +28,28 @@ main:
  addl $4, %esp
  pushl %eax
  call inject_big
- movl %eax, %esi
+ movl %eax, %ecx
  addl $4, %esp
+ movl %ecx, -4(%ebp)
  pushl $0
  call inject_int
  movl %eax, %ecx
  addl $4, %esp
- pushl %ebx
+ movl %ebx, %eax
+ movl -4(%ebp), %edx
+ pushl %eax
  pushl %ecx
- pushl %esi
+ pushl %edx
  call set_subscript
- movl %eax, %ecx
+ movl %eax, %eax
  addl $12, %esp
+ movl %eax, %ecx
  pushl $1
  call inject_int
  movl %eax, %ecx
  addl $4, %esp
- movl -4(%ebp), %eax
- movl %esi, %edx
+ movl %esi, %eax
+ movl -4(%ebp), %edx
  pushl %eax
  pushl %ecx
  pushl %edx
@@ -59,26 +61,29 @@ main:
  call inject_int
  movl %eax, %ecx
  addl $4, %esp
- pushl %edi
+ movl %edi, %eax
+ movl -4(%ebp), %edx
+ pushl %eax
  pushl %ecx
- pushl %esi
+ pushl %edx
  call set_subscript
- movl %eax, %ecx
+ movl %eax, %eax
  addl $12, %esp
+ movl %eax, %ecx
  pushl $4
  call inject_int
- movl %eax, %edi
+ movl %eax, %esi
  addl $4, %esp
- pushl $5
- call inject_int
- movl %eax, %ebx
- addl $4, %esp
- movl $6, %eax
+ movl $5, %eax
  pushl %eax
  call inject_int
  movl %eax, %ecx
  addl $4, %esp
  movl %ecx, -8(%ebp)
+ pushl $6
+ call inject_int
+ movl %eax, %ebx
+ addl $4, %esp
  pushl $3
  call inject_int
  movl %eax, %eax
@@ -89,28 +94,24 @@ main:
  addl $4, %esp
  pushl %eax
  call inject_big
- movl %eax, %ecx
+ movl %eax, %edi
  addl $4, %esp
- movl %ecx, -12(%ebp)
  pushl $0
  call inject_int
  movl %eax, %ecx
  addl $4, %esp
- movl %edi, %eax
- movl -12(%ebp), %edx
- pushl %eax
+ pushl %esi
  pushl %ecx
- pushl %edx
+ pushl %edi
  call set_subscript
- movl %eax, %eax
- addl $12, %esp
  movl %eax, %ecx
+ addl $12, %esp
  pushl $1
  call inject_int
  movl %eax, %ecx
  addl $4, %esp
- movl %ebx, %eax
- movl -12(%ebp), %edx
+ movl -8(%ebp), %eax
+ movl %edi, %edx
  pushl %eax
  pushl %ecx
  pushl %edx
@@ -122,30 +123,27 @@ main:
  call inject_int
  movl %eax, %ecx
  addl $4, %esp
- movl -8(%ebp), %eax
- movl -12(%ebp), %edx
- pushl %eax
+ pushl %ebx
  pushl %ecx
- pushl %edx
+ pushl %edi
  call set_subscript
- movl %eax, %eax
- addl $12, %esp
  movl %eax, %ecx
- pushl %esi
- call print_any
- addl $4, %esp
- movl -12(%ebp), %eax
+ addl $12, %esp
+ movl -4(%ebp), %eax
  pushl %eax
  call print_any
  addl $4, %esp
- movl %esi, %eax
- movl -12(%ebp), %esi
- movl %eax, -12(%ebp)
- pushl %esi
+ pushl %edi
  call print_any
  addl $4, %esp
- movl -12(%ebp), %eax
+ movl -4(%ebp), %eax
+ movl %edi, -4(%ebp)
+ movl %eax, %edi
+ movl -4(%ebp), %eax
  pushl %eax
+ call print_any
+ addl $4, %esp
+ pushl %edi
  call print_any
  addl $4, %esp
  movl $0, %eax 
